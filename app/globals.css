@@ -1,0 +1,174 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* OLIVIER brand colors based on logo specifications */
+:root {
+  /* Primary Navy Blue from logo */
+  --olivier-navy: #0b3b5a;
+  --olivier-teal: #1f6f8b;
+  --olivier-green: #7bc043;
+  --olivier-cream: #f6f0e3;
+  --olivier-gray: #c9d6dd;
+  --olivier-text: #08324a;
+
+  /* Design tokens mapped to OLIVIER colors */
+  --background: #f6f0e3;
+  --foreground: #08324a;
+  --card: #ffffff;
+  --card-foreground: #08324a;
+  --popover: #ffffff;
+  --popover-foreground: #08324a;
+  --primary: #0b3b5a;
+  --primary-foreground: #ffffff;
+  --secondary: #1f6f8b;
+  --secondary-foreground: #ffffff;
+  --muted: #c9d6dd;
+  --muted-foreground: #08324a;
+  --accent: #7bc043;
+  --accent-foreground: #08324a;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #c9d6dd;
+  --input: #ffffff;
+  --ring: #1f6f8b;
+  --chart-1: #0b3b5a;
+  --chart-2: #1f6f8b;
+  --chart-3: #7bc043;
+  --chart-4: #c9d6dd;
+  --chart-5: #08324a;
+  --radius: 0.5rem;
+  --sidebar: #0b3b5a;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #1f6f8b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #7bc043;
+  --sidebar-accent-foreground: #08324a;
+  --sidebar-border: #1f6f8b;
+  --sidebar-ring: #7bc043;
+  --font-sans: "Montserrat", system-ui, -apple-system, sans-serif;
+  --shadow-x: 0px;
+  --shadow-y: 2px;
+  --shadow-blur: 8px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.1;
+  --shadow-color: #0b3b5a;
+}
+
+.dark {
+  --background: #08324a;
+  --foreground: #f6f0e3;
+  --card: #0b3b5a;
+  --card-foreground: #f6f0e3;
+  --popover: #0b3b5a;
+  --popover-foreground: #f6f0e3;
+  --primary: #1f6f8b;
+  --primary-foreground: #ffffff;
+  --secondary: #7bc043;
+  --secondary-foreground: #08324a;
+  --muted: #1f6f8b;
+  --muted-foreground: #c9d6dd;
+  --accent: #7bc043;
+  --accent-foreground: #08324a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #1f6f8b;
+  --input: #0b3b5a;
+  --ring: #7bc043;
+  --chart-1: #1f6f8b;
+  --chart-2: #7bc043;
+  --chart-3: #c9d6dd;
+  --chart-4: #f6f0e3;
+  --chart-5: #0b3b5a;
+  --sidebar: #08324a;
+  --sidebar-foreground: #f6f0e3;
+  --sidebar-primary: #1f6f8b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #7bc043;
+  --sidebar-accent-foreground: #08324a;
+  --sidebar-border: #1f6f8b;
+  --sidebar-ring: #7bc043;
+}
+
+@theme inline {
+  --font-sans: "Montserrat", system-ui, -apple-system, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --shadow-2xs: var(--shadow-x) var(--shadow-y)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-xs: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-spread)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-sm: var(--shadow-x) var(--shadow-y) calc(var(--shadow-blur) * 1.5) var(--shadow-spread)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent), var(--shadow-x)
+    var(--shadow-y) var(--shadow-blur) calc(var(--shadow-spread) - 1px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-md: calc(var(--shadow-x) * 2) calc(var(--shadow-y) * 2) calc(var(--shadow-blur) * 3)
+    calc(var(--shadow-spread) - 1px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent), var(--shadow-x)
+    var(--shadow-y) calc(max(0px, var(--shadow-blur) * 2 - 2px)) calc(var(--shadow-spread) - 2px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-lg: calc(var(--shadow-x) * 4) calc(var(--shadow-y) * 4) calc(var(--shadow-blur) * 5)
+    calc(var(--shadow-spread) - 3px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent), calc(var(--shadow-x) * 2)
+    calc(var(--shadow-y) * 2) calc(max(0px, var(--shadow-blur) * 3 - 4px)) calc(var(--shadow-spread) - 4px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-xl: calc(var(--shadow-x) * 6) calc(var(--shadow-y) * 6) calc(var(--shadow-blur) * 7)
+    calc(var(--shadow-spread) - 5px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent), calc(var(--shadow-x) * 4)
+    calc(var(--shadow-y) * 4) calc(max(0px, var(--shadow-blur) * 5 - 6px)) calc(var(--shadow-spread) - 6px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 100%), transparent);
+  --shadow-2xl: calc(var(--shadow-x) * 8) calc(var(--shadow-y) * 8) calc(max(0px, var(--shadow-blur) * 9 - 8px))
+    calc(var(--shadow-spread) - 12px)
+    color-mix(in srgb, var(--shadow-color) calc(var(--shadow-opacity) * 250%), transparent);
+  --shadow: var(--shadow-md);
+  --color-shadow-color: var(--shadow-color);
+  --shadow-opacity: var(--shadow-opacity);
+  --shadow-spread: var(--shadow-spread);
+  --shadow-blur: var(--shadow-blur);
+  --shadow-y: var(--shadow-y);
+  --shadow-x: var(--shadow-x);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
