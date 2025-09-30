@@ -73,7 +73,20 @@ export function exportToExcel(data: any[], filename: string, sheetName = "Sheet1
   const worksheet = XLSX.utils.json_to_sheet(data)
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-  XLSX.writeFile(workbook, filename)
+
+  // Generate buffer and create blob for browser download
+  const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" })
+  const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+
+  // Create download link and trigger download
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(url)
 }
 
 export function generateMultiSheetTemplate(filename: string) {
@@ -162,7 +175,19 @@ export function generateMultiSheetTemplate(filename: string) {
   const debtsSheet = XLSX.utils.json_to_sheet(debtsData)
   XLSX.utils.book_append_sheet(workbook, debtsSheet, "Debts")
 
-  XLSX.writeFile(workbook, filename)
+  // Generate buffer and create blob for browser download
+  const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" })
+  const blob = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" })
+
+  // Create download link and trigger download
+  const url = window.URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(url)
 }
 
 export function generateTemplate(columns: ExcelColumn[], filename: string) {
