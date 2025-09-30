@@ -10,9 +10,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { parseExcelFile, autoMapColumns, validateData, type MappingRule } from "@/lib/excel-utils"
-import { Upload, CheckCircle, AlertCircle } from "lucide-react"
+import { Upload, CheckCircle, AlertCircle, FileCheck } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
 
 interface ExcelImportDialogProps {
   open: boolean
@@ -31,6 +32,9 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
   const [errors, setErrors] = useState<any[]>([])
   const [step, setStep] = useState<"upload" | "mapping" | "preview">("upload")
   const [loading, setLoading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [importProgress, setImportProgress] = useState(0)
+  const [isComplete, setIsComplete] = useState(false)
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -38,28 +42,54 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
 
     setFile(selectedFile)
     setLoading(true)
+    setUploadProgress(0)
+    setIsComplete(false)
+
+    const progressInterval = setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev >= 90) {
+          clearInterval(progressInterval)
+          return 90
+        }
+        return prev + 10
+      })
+    }, 100)
 
     try {
+      console.log("[v0] Starting Excel file parsing:", selectedFile.name)
       const data = await parseExcelFile(selectedFile)
+      console.log("[v0] Parsed data rows:", data.length)
+
+      setUploadProgress(100)
+      clearInterval(progressInterval)
       setParsedData(data)
 
       if (data.length > 0) {
         const columns = Object.keys(data[0])
+        console.log("[v0] Excel columns found:", columns)
         setExcelColumns(columns)
 
         const autoMappings = autoMapColumns(
           columns,
           fieldMappings.map((f) => f.key),
         )
+        console.log("[v0] Auto-mapped columns:", autoMappings.length)
         setMappings(autoMappings)
-        setStep("mapping")
+
+        setTimeout(() => {
+          setIsComplete(true)
+          setStep("mapping")
+        }, 500)
       }
     } catch (error) {
+      console.error("[v0] Excel parsing error:", error)
+      clearInterval(progressInterval)
       toast({
         title: "Erreur",
         description: "Impossible de lire le fichier Excel",
         variant: "destructive",
       })
+      setUploadProgress(0)
     } finally {
       setLoading(false)
     }
@@ -106,6 +136,8 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
     }
 
     setLoading(true)
+    setImportProgress(0)
+
     try {
       const transformedData = parsedData.map((row) => {
         const transformed: any = {}
@@ -117,17 +149,31 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
         return transformed
       })
 
+      console.log("[v0] Starting import of", transformedData.length, "rows")
+
+      for (let i = 0; i < transformedData.length; i++) {
+        setImportProgress(Math.round(((i + 1) / transformedData.length) * 100))
+        await new Promise((resolve) => setTimeout(resolve, 10)) // Small delay for UI update
+      }
+
       await onImport(transformedData)
+      console.log("[v0] Import completed successfully")
+
+      setImportProgress(100)
       toast({
         title: "Succès",
-        description: `${transformedData.length} lignes importées`,
+        description: `${transformedData.length} lignes importées avec succès`,
       })
-      onOpenChange(false)
-      resetState()
+
+      setTimeout(() => {
+        onOpenChange(false)
+        resetState()
+      }, 1000)
     } catch (error) {
+      console.error("[v0] Import error:", error)
       toast({
         title: "Erreur",
-        description: "Échec de l'importation",
+        description: "Échec de l'importation des données",
         variant: "destructive",
       })
     } finally {
@@ -142,6 +188,9 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
     setMappings([])
     setErrors([])
     setStep("upload")
+    setUploadProgress(0)
+    setImportProgress(0)
+    setIsComplete(false)
   }
 
   return (
@@ -168,6 +217,23 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
               />
               {file && <p className="mt-2 text-sm text-muted-foreground">{file.name}</p>}
             </div>
+
+            {loading && uploadProgress > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Chargement du fichier...</span>
+                  <span className="font-medium">{uploadProgress}%</span>
+                </div>
+                <Progress value={uploadProgress} className="h-2" />
+              </div>
+            )}
+
+            {isComplete && (
+              <div className="flex items-center justify-center gap-2 text-sm text-accent">
+                <FileCheck className="h-5 w-5" />
+                <span className="font-medium">Fichier chargé avec succès!</span>
+              </div>
+            )}
           </div>
         )}
 
@@ -275,8 +341,18 @@ export function ExcelImportDialog({ open, onOpenChange, onImport, fieldMappings,
               </Table>
             </div>
 
+            {loading && importProgress > 0 && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Importation en cours...</span>
+                  <span className="font-medium">{importProgress}%</span>
+                </div>
+                <Progress value={importProgress} className="h-2" />
+              </div>
+            )}
+
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setStep("mapping")}>
+              <Button variant="outline" onClick={() => setStep("mapping")} disabled={loading}>
                 Retour
               </Button>
               <Button onClick={handleImport} disabled={loading || errors.length > 0}>

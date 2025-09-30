@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { clearSession } from "@/lib/session"
 import { createBrowserClient } from "@/lib/supabase/client"
-import { Trash2, Database, TrendingUp, Activity } from "lucide-react"
+import { useTheme } from "next-themes"
+import { Trash2, Database, TrendingUp, Activity, Moon, Sun, Palette } from "lucide-react"
 import Link from "next/link"
 
 export default function SettingsPage() {
   const { toast } = useToast()
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [dbStats, setDbStats] = useState({
     transactions: 0,
     employees: 0,
@@ -23,6 +26,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setMounted(true)
     loadDatabaseStats()
   }, [])
 
@@ -67,6 +71,39 @@ export default function SettingsPage() {
     <div className="flex flex-1 flex-col">
       <DashboardHeader title="Paramètres" description="Configurer l'application" />
       <main className="flex-1 space-y-6 p-4 md:p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Palette className="h-5 w-5" />
+              Apparence
+            </CardTitle>
+            <CardDescription>Choisir le thème de l'application</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {mounted && (
+              <div className="flex gap-3">
+                <Button
+                  variant={theme === "light" ? "default" : "outline"}
+                  onClick={() => setTheme("light")}
+                  className="flex-1 gap-2"
+                >
+                  <Sun className="h-4 w-4" />
+                  Clair
+                </Button>
+                <Button
+                  variant={theme === "dark" ? "default" : "outline"}
+                  onClick={() => setTheme("dark")}
+                  className="flex-1 gap-2"
+                >
+                  <Moon className="h-4 w-4" />
+                  Sombre
+                </Button>
+              </div>
+            )}
+            <p className="mt-3 text-sm text-muted-foreground">Le thème sera appliqué à toute l'application</p>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
