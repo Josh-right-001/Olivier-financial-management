@@ -12,30 +12,7 @@ import { LoadingScreen } from "@/components/loading-screen"
 import { MobileNav } from "@/components/mobile-nav"
 import { ThemeProvider } from "@/components/theme-provider"
 
-import { Montserrat, Geist, Geist_Mono, Source_Serif_4, Geist as V0_Font_Geist, Geist_Mono as V0_Font_Geist_Mono, Source_Serif_4 as V0_Font_Source_Serif_4 } from 'next/font/google'
-
-// Initialize fonts
-V0_Font_Geist({ weight: ["100","200","300","400","500","600","700","800","900"] })
-V0_Font_Geist_Mono({ weight: ["100","200","300","400","500","600","700","800","900"] })
-V0_Font_Source_Serif_4({ weight: ["200","300","400","500","600","700","800","900"] })
-
-const geist = Geist({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  variable: "--font-geist",
-})
-
-const geistMono = Geist_Mono({
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-})
-
-const sourceSerif4 = Source_Serif_4({
-  weight: ["200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
-  variable: "--font-source-serif",
-})
+import { Montserrat } from "next/font/google"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
